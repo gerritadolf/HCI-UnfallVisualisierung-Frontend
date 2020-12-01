@@ -1,10 +1,11 @@
 import './App.scss';
-import Map from "./map/GoogleMap";
+import MapboxMap from "./mapboxMap/MapboxMap";
+import React from "react";
 
 function App() {
     return (
         <div className="App">
-            <Map/>
+            <MapboxMap/>
         </div>
     );
 }
