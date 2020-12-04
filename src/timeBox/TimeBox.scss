@@ -1,0 +1,34 @@
+.time-box {
+    min-width: 300px;
+    width: 20%;
+    max-width: 90%;
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 12px;
+    background-color: #404040;
+    color: #ffffff;
+    z-index: 1 !important;
+    padding: 6px;
+    font-weight: bold;
+
+    .time-slider{
+        width: 100%;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        .slider-thumb{
+            background: #ffffff;
+            color: #222222;
+            padding: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+        .slider-track{
+            cursor: pointer;
+            height: 10px;
+            background: #808080;
+        }
+    }
+}
