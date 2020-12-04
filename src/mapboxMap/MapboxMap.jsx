@@ -1,9 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import mapboxgl from 'mapbox-gl';
 import "./MapboxMap.css";
 import {addPopup} from "../helper/mapHelper";
 import StateDetails from "./stateDetails/StateDetails";
+import AccidentDetails from "./accidentDetails/AccidentDetails";
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9uYXNnbzk3IiwiYSI6ImNraTRyaHkzNTAyNzgzM24ydG45dnVkc3oifQ.X3ChHgCMZxbD3yEPNDkr9A'; // public token
 
@@ -57,15 +57,29 @@ export default class MapboxMap extends React.Component {
             });
 
             map.on("click", function (e) {
-                var features = map.queryRenderedFeatures(e.point, {layers: ["state-fills"]});
+                let features = map.queryRenderedFeatures(e.point, {layers: ["state-fills", "earthquakes-point"]});
                 if (features.length) {
-                    let name = features[0].properties.name
+                    let feature = features.find(f => f.layer.id === "earthquakes-point")
+                    if (feature) {
+                        // Show point popup
+                        addPopup(e.lngLat, map, (
+                            <div>
+                                <AccidentDetails/>
+                            </div>
+                        ))
+                    } else {
+                        feature = features.find(f => f.layer.id === "state-fills")
+                        if (feature) {
+                            // Show state popup
+                            let name = features[0].properties.name
 
-                    addPopup(e.lngLat, map, (
-                        <div>
-                            <StateDetails stateName={name}></StateDetails>
-                        </div>
-                    ))
+                            addPopup(e.lngLat, map, (
+                                <div>
+                                    <StateDetails stateName={name}/>
+                                </div>
+                            ))
+                        }
+                    }
                 }
             });
 

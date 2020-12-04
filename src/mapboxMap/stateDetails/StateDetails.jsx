@@ -18,7 +18,7 @@ class StateDetails extends Component {
             <div>
                 <h1>{this.props.stateName}</h1>
                 <AreaChart
-                    width={600} height={400}
+                    width={400} height={250}
                     data={this.data}
                            margin={{top: 10, right: 30, left: 0, bottom: 0}}>
                     <CartesianGrid strokeDasharray="3 3"/>
