@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import mapboxgl from 'mapbox-gl';
 import "./MapboxMap.css";
 import {addPopup} from "../helper/mapHelper";
+import StateDetails from "./stateDetails/StateDetails";
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9uYXNnbzk3IiwiYSI6ImNraTRyaHkzNTAyNzgzM24ydG45dnVkc3oifQ.X3ChHgCMZxbD3yEPNDkr9A'; // public token
 
@@ -62,8 +63,7 @@ export default class MapboxMap extends React.Component {
 
                     addPopup(e.lngLat, map, (
                         <div>
-                            <h2>{name}</h2>
-                            <p>{`Hier sollen Informationen zum Unfallgeschehen in ${name} stehen.`}</p>
+                            <StateDetails stateName={name}></StateDetails>
                         </div>
                     ))
                 }

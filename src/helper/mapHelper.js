@@ -5,7 +5,7 @@ export function addPopup(lngLat, map, component) {
     const placeholder = document.createElement('div');
     ReactDOM.render(component, placeholder);
 
-    new mapboxgl.Popup()
+    new mapboxgl.Popup({className: "state-popup"})
         .setDOMContent(placeholder)
         .setLngLat(lngLat)
         .addTo(map);
