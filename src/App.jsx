@@ -1,10 +1,13 @@
 import './App.scss';
-import Map from "./map/GoogleMap";
+import MapboxMap from "./mapboxMap/MapboxMap";
+import React from "react";
+import TimeBox from "./timeBox/TimeBox";
 
 function App() {
     return (
         <div className="App">
-            <Map/>
+            <MapboxMap/>
+            <TimeBox/>
         </div>
     );
 }
