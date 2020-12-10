@@ -41,9 +41,9 @@ export default class MapboxMap extends React.Component {
 
 
             // States
-            map.addSource("states", {
-                "type": "geojson",
-                "data": "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces.geojson"
+            /*map.addSource("states", {
+                type: "geojson",
+                data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces.geojson"
             });
 
             map.addLayer({
@@ -54,7 +54,33 @@ export default class MapboxMap extends React.Component {
                 "paint": {
                     "fill-opacity": 0
                 }
+            });*/
+
+            let startDate = new Date('1 January, 2017 01:00:00');
+            let endDate = new Date('2 January, 2017 01:00:00');
+            let sourceString = "https://localhost:5001/accident/MapBox?startDate=" + startDate.toJSON() +"&endDate=" + endDate.toJSON();
+
+            var geoJson = this.getGeoJson(sourceString);
+
+            console.log("Data_scheiß: " + JSON.stringify(geoJson));
+
+            map.addSource("test",
+            {
+                type:"geojson",
+                data: geoJson
+            }
+            );
+
+            map.addLayer({
+                id: "test-points",
+                type: "circle",
+                source: "test",
+                paint: {
+                    'circle-radius': 10,
+                    'circle-color': '#ff0000'
+                    }
             });
+
 
             map.on("click", function (e) {
                 let features = map.queryRenderedFeatures(e.point, {layers: ["state-fills", "earthquakes-point"]});
@@ -384,6 +410,16 @@ export default class MapboxMap extends React.Component {
         });
     }
 
+    async getGeoJson(url){
+        try {
+            const response = await fetch(url);
+            const myJson = await response.json();
+            console.log("Data: " + JSON.stringify(myJson["data"]));
+            return myJson["data"];
+        } catch (e) {
+            console.log("Fetch error" + e);
+        }
+    }
     render() {
         return (
             <div>
