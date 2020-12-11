@@ -17,6 +17,7 @@ export default class MapboxMap extends React.Component {
         };
     }
 
+
     componentDidMount() {
         const map = new mapboxgl.Map({
             container: this.mapContainer,
@@ -57,18 +58,14 @@ export default class MapboxMap extends React.Component {
             });*/
 
             let startDate = new Date('1 January, 2017 01:00:00');
-            let endDate = new Date('2 January, 2017 01:00:00');
+            let endDate = new Date('1 January, 2018 01:00:00');
             let sourceString = "https://localhost:5001/accident/MapBox?startDate=" + startDate.toJSON() +"&endDate=" + endDate.toJSON();
-
-            var geoJson = this.getGeoJson(sourceString);
-
-            console.log("Data_scheiß: " + JSON.stringify(geoJson));
 
             map.addSource("test",
             {
-                type:"geojson",
-                data: geoJson
-            }
+                type: 'geojson',
+                data: sourceString
+                }
             );
 
             map.addLayer({
@@ -76,7 +73,7 @@ export default class MapboxMap extends React.Component {
                 type: "circle",
                 source: "test",
                 paint: {
-                    'circle-radius': 10,
+                    'circle-radius': 2,
                     'circle-color': '#ff0000'
                     }
             });
@@ -410,16 +407,6 @@ export default class MapboxMap extends React.Component {
         });
     }
 
-    async getGeoJson(url){
-        try {
-            const response = await fetch(url);
-            const myJson = await response.json();
-            console.log("Data: " + JSON.stringify(myJson["data"]));
-            return myJson["data"];
-        } catch (e) {
-            console.log("Fetch error" + e);
-        }
-    }
     render() {
         return (
             <div>
