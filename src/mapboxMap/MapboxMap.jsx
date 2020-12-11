@@ -21,9 +21,7 @@ export default class MapboxMap extends React.Component {
     componentDidMount() {
         const map = new mapboxgl.Map({
             container: this.mapContainer,
-            // style: 'mapbox://styles/mapbox/streets-v11',
             style: 'mapbox://styles/jonasgo97/cki60o3iv19te19pi2hc48lki',
-            // style: 'mapbox://styles/mapbox/dark-v10',
             center: [this.state.lng, this.state.lat],
             zoom: this.state.zoom
         });
@@ -42,7 +40,7 @@ export default class MapboxMap extends React.Component {
 
 
             // States
-            /*map.addSource("states", {
+            map.addSource("states", {
                 type: "geojson",
                 data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces.geojson"
             });
@@ -55,40 +53,20 @@ export default class MapboxMap extends React.Component {
                 "paint": {
                     "fill-opacity": 0
                 }
-            });*/
-
-            let startDate = new Date('1 January, 2017 01:00:00');
-            let endDate = new Date('1 January, 2018 01:00:00');
-            let sourceString = "https://localhost:5001/accident/MapBox?startDate=" + startDate.toJSON() +"&endDate=" + endDate.toJSON();
-
-            map.addSource("test",
-            {
-                type: 'geojson',
-                data: sourceString
-                }
-            );
-
-            map.addLayer({
-                id: "test-points",
-                type: "circle",
-                source: "test",
-                paint: {
-                    'circle-radius': 2,
-                    'circle-color': '#ff0000'
-                    }
             });
 
+            let startDate = new Date('1 January, 2017 01:00:00');
+            let endDate = new Date('3 January, 2017 01:00:00');
+            let sourceString = "https://localhost:5001/accident/MapBox?startDate=" + startDate.toJSON() + "&endDate=" + endDate.toJSON();
 
             map.on("click", function (e) {
-                let features = map.queryRenderedFeatures(e.point, {layers: ["state-fills", "earthquakes-point"]});
+                let features = map.queryRenderedFeatures(e.point, {layers: ["state-fills", "accident-point"]});
                 if (features.length) {
-                    let feature = features.find(f => f.layer.id === "earthquakes-point")
+                    let feature = features.find(f => f.layer.id === "accident-point")
                     if (feature) {
                         // Show point popup
                         addPopup(e.lngLat, map, (
-                            <div>
-                                <AccidentDetails/>
-                            </div>
+                            <AccidentDetails/>
                         ))
                     } else {
                         feature = features.find(f => f.layer.id === "state-fills")
@@ -97,9 +75,7 @@ export default class MapboxMap extends React.Component {
                             let name = features[0].properties.name
 
                             addPopup(e.lngLat, map, (
-                                <div>
-                                    <StateDetails stateName={name}/>
-                                </div>
+                                <StateDetails stateName={name}/>
                             ))
                         }
                     }
@@ -151,24 +127,24 @@ export default class MapboxMap extends React.Component {
             //     map.setFilter("state-fills-hover", ["==", "name", ""]);
             // });
 
-            //earthquakes source
-            map.addSource('earthquakes', {
+            //accident source
+            map.addSource('accident', {
                 type: 'geojson',
-                // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
+                data: sourceString,
+                // Point to GeoJSON data. This example visualizes all M1.0+ accident
                 // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-                data:
-                    'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson',
+                // data: "https://docs.mapbox.com/mapbox-gl-js/assets/accident.geojson",
                 // cluster: true,
                 // clusterMaxZoom: 14, // Max zoom to cluster points on
                 // clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
             });
 
 
-            // // earthquakes cluster
+            // // accident cluster
             // map.addLayer({
             //     id: 'clusters',
             //     type: 'circle',
-            //     source: 'earthquakes',
+            //     source: 'accident',
             //     filter: ['has', 'point_count'],
             //     paint: {
             //         // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
@@ -200,7 +176,7 @@ export default class MapboxMap extends React.Component {
             // map.addLayer({
             //     id: 'cluster-count',
             //     type: 'symbol',
-            //     source: 'earthquakes',
+            //     source: 'accident',
             //     filter: ['has', 'point_count'],
             //     layout: {
             //         'text-field': '{point_count_abbreviated}',
@@ -212,7 +188,7 @@ export default class MapboxMap extends React.Component {
             // map.addLayer({
             //     id: 'unclustered-point',
             //     type: 'circle',
-            //     source: 'earthquakes',
+            //     source: 'accident',
             //     filter: ['!', ['has', 'point_count']],
             //     paint: {
             //         'circle-color': '#11b4da',
@@ -228,7 +204,7 @@ export default class MapboxMap extends React.Component {
             //         layers: ['clusters']
             //     });
             //     var clusterId = features[0].properties.cluster_id;
-            //     map.getSource('earthquakes').getClusterExpansionZoom(
+            //     map.getSource('accident').getClusterExpansionZoom(
             //         clusterId,
             //         function (err, zoom) {
             //             if (err) return;
@@ -279,12 +255,12 @@ export default class MapboxMap extends React.Component {
             // });
 
 
-            // earthquakes heatmap
+            // accident heatmap
             map.addLayer(
                 {
-                    'id': 'earthquakes-heat',
+                    'id': 'accident-heat',
                     'type': 'heatmap',
-                    'source': 'earthquakes',
+                    'source': 'accident',
                     'maxzoom': 9,
                     'paint': {
                         // Increase the heatmap weight based on frequency and property magnitude
@@ -355,9 +331,9 @@ export default class MapboxMap extends React.Component {
 
             map.addLayer(
                 {
-                    'id': 'earthquakes-point',
+                    'id': 'accident-point',
                     'type': 'circle',
-                    'source': 'earthquakes',
+                    'source': 'accident',
                     'minzoom': 7,
                     'paint': {
                         // Size circle radius by earthquake magnitude and zoom level
