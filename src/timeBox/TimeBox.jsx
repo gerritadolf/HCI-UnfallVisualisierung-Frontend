@@ -3,6 +3,13 @@ import "./TimeBox.scss";
 import ReactSlider from "react-slider";
 
 class TimeBox extends Component {
+
+    valueToText(value) {
+        const year = Math.floor(value);
+        const quarter = (value - year) * 4 + 1;
+        return `Q${quarter} ${year}`;
+    }
+
     render() {
         return (
             <div className={"time-box"}>
@@ -11,9 +18,10 @@ class TimeBox extends Component {
                     className="time-slider"
                     thumbClassName="slider-thumb"
                     trackClassName="slider-track"
-                    renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
+                    renderThumb={(props, state) => <div {...props}>{this.valueToText(state.valueNow)}</div>}
                     min={2016}
                     max={2020}
+                    step={0.25}
                 />
             </div>
         );
