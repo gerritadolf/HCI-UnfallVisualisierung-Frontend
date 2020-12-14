@@ -69,7 +69,7 @@ export default class MapboxMap extends React.Component {
                     if (feature) {
                         // Show point popup
                         addPopup(e.lngLat, this.map, (
-                            <AccidentDetails/>
+                            <AccidentDetails id={feature.properties.Id}/>
                         ))
                     } else {
                         feature = features.find(f => f.layer.id === "state-fills")

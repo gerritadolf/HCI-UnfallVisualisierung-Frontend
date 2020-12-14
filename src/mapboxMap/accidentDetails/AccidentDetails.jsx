@@ -3,9 +3,12 @@ import "./AccidentDetails.scss";
 
 class AccidentDetails extends Component {
     render() {
+        const {id} = this.props;
         return (
             <div>
                 Accident Details
+                <br/>
+                ID: {id}
             </div>
         );
     }
