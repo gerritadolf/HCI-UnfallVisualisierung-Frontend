@@ -17,6 +17,7 @@ export default class MapboxMap extends React.Component {
             lat: 37.090240,
             zoom: 4.5
         };
+        this.map = null;
     }
 
 
@@ -61,7 +62,7 @@ export default class MapboxMap extends React.Component {
             // let endDate = new Date('3 January, 2017 01:00:00');
             // let sourceString = "https://localhost:5001/accident/MapBox?startDate=" + startDate.toJSON() + "&endDate=" + endDate.toJSON();
 
-            this.map.on("click", function (e) {
+            this.map.on("click", (e) => {
                 let features = this.map.queryRenderedFeatures(e.point, {layers: ["state-fills", "accident-point"]});
                 if (features.length) {
                     let feature = features.find(f => f.layer.id === "accident-point")
@@ -385,7 +386,7 @@ export default class MapboxMap extends React.Component {
         });
     }
 
-    getSourceString(value) {
+    getSourceString = (value) => {
         const year = Math.floor(value)
         const quarter = (value - year) * 4 + 1;
 
@@ -395,10 +396,10 @@ export default class MapboxMap extends React.Component {
         startDate.setMonth((quarter * 3) - 3, 1);
         endDate.setMonth((quarter * 3), 0);
 
-        return "https://localhost:5001/accident/MapBox?startDate=" + startDate.toJSON() + "&endDate=" + endDate.toJSON();
+        return `https://localhost:5001/accident/MapBox?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
     }
 
-    loadGeoJson(value) {
+    loadGeoJson = (value) => {
         console.log(this.map)
         this.map.getSource('accident').setData(this.getSourceString(value));
     }
