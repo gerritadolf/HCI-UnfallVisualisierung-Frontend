@@ -11,6 +11,7 @@ class TimeBox extends Component {
     }
 
     render() {
+        const {onChange} = this.props;
         return (
             <div className={"time-box"}>
                 Zeitleiste
@@ -22,6 +23,7 @@ class TimeBox extends Component {
                     min={2016}
                     max={2020}
                     step={0.25}
+                    onChange={onChange}
                 />
             </div>
         );

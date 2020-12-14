@@ -4,6 +4,8 @@ import "./MapboxMap.css";
 import {addPopup} from "../helper/mapHelper";
 import StateDetails from "./stateDetails/StateDetails";
 import AccidentDetails from "./accidentDetails/AccidentDetails";
+import TimeBox from "../timeBox/TimeBox";
+import Menu from "../menu/Menu";
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9uYXNnbzk3IiwiYSI6ImNraTRyaHkzNTAyNzgzM24ydG45dnVkc3oifQ.X3ChHgCMZxbD3yEPNDkr9A'; // public token
 
@@ -19,33 +21,33 @@ export default class MapboxMap extends React.Component {
 
 
     componentDidMount() {
-        const map = new mapboxgl.Map({
+        this.map = new mapboxgl.Map({
             container: this.mapContainer,
             style: 'mapbox://styles/jonasgo97/cki60o3iv19te19pi2hc48lki',
             center: [this.state.lng, this.state.lat],
             zoom: this.state.zoom
         });
 
-        map.on("load", () => {
+        this.map.on("load", () => {
             console.log("map loaded")
 
             // Coordinates in the upper left corner
-            map.on('move', () => {
+            this.map.on('move', () => {
                 this.setState({
-                    lng: map.getCenter().lng.toFixed(4),
-                    lat: map.getCenter().lat.toFixed(4),
-                    zoom: map.getZoom().toFixed(2)
+                    lng: this.map.getCenter().lng.toFixed(4),
+                    lat: this.map.getCenter().lat.toFixed(4),
+                    zoom: this.map.getZoom().toFixed(2)
                 });
             });
 
 
             // States
-            map.addSource("states", {
+            this.map.addSource("states", {
                 type: "geojson",
                 data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces.geojson"
             });
 
-            map.addLayer({
+            this.map.addLayer({
                 "id": "state-fills",
                 "type": "fill",
                 "source": "states",
@@ -55,17 +57,17 @@ export default class MapboxMap extends React.Component {
                 }
             });
 
-            let startDate = new Date('1 January, 2017 01:00:00');
-            let endDate = new Date('3 January, 2017 01:00:00');
-            let sourceString = "https://localhost:5001/accident/MapBox?startDate=" + startDate.toJSON() + "&endDate=" + endDate.toJSON();
+            // let startDate = new Date('1 January, 2017 01:00:00');
+            // let endDate = new Date('3 January, 2017 01:00:00');
+            // let sourceString = "https://localhost:5001/accident/MapBox?startDate=" + startDate.toJSON() + "&endDate=" + endDate.toJSON();
 
-            map.on("click", function (e) {
-                let features = map.queryRenderedFeatures(e.point, {layers: ["state-fills", "accident-point"]});
+            this.map.on("click", function (e) {
+                let features = this.map.queryRenderedFeatures(e.point, {layers: ["state-fills", "accident-point"]});
                 if (features.length) {
                     let feature = features.find(f => f.layer.id === "accident-point")
                     if (feature) {
                         // Show point popup
-                        addPopup(e.lngLat, map, (
+                        addPopup(e.lngLat, this.map, (
                             <AccidentDetails/>
                         ))
                     } else {
@@ -74,7 +76,7 @@ export default class MapboxMap extends React.Component {
                             // Show state popup
                             let name = features[0].properties.name
 
-                            addPopup(e.lngLat, map, (
+                            addPopup(e.lngLat, this.map, (
                                 <StateDetails stateName={name}/>
                             ))
                         }
@@ -128,9 +130,9 @@ export default class MapboxMap extends React.Component {
             // });
 
             //accident source
-            map.addSource('accident', {
+            this.map.addSource('accident', {
                 type: 'geojson',
-                data: sourceString,
+                data: this.getSourceString(2016),
                 // Point to GeoJSON data. This example visualizes all M1.0+ accident
                 // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
                 // data: "https://docs.mapbox.com/mapbox-gl-js/assets/accident.geojson",
@@ -256,7 +258,7 @@ export default class MapboxMap extends React.Component {
 
 
             // accident heatmap
-            map.addLayer(
+            this.map.addLayer(
                 {
                     'id': 'accident-heat',
                     'type': 'heatmap',
@@ -329,7 +331,7 @@ export default class MapboxMap extends React.Component {
                 'waterway-label'
             );
 
-            map.addLayer(
+            this.map.addLayer(
                 {
                     'id': 'accident-point',
                     'type': 'circle',
@@ -383,6 +385,24 @@ export default class MapboxMap extends React.Component {
         });
     }
 
+    getSourceString(value) {
+        const year = Math.floor(value)
+        const quarter = (value - year) * 4 + 1;
+
+        let startDate = new Date(`01 Jan ${year} 00:00:00 UTC`);
+        let endDate = new Date(`31 Dec ${year} 00:00:00 UTC`);
+
+        startDate.setMonth((quarter * 3) - 3, 1);
+        endDate.setMonth((quarter * 3), 0);
+
+        return "https://localhost:5001/accident/MapBox?startDate=" + startDate.toJSON() + "&endDate=" + endDate.toJSON();
+    }
+
+    loadGeoJson(value) {
+        console.log(this.map)
+        this.map.getSource('accident').setData(this.getSourceString(value));
+    }
+
     render() {
         return (
             <div>
@@ -390,6 +410,8 @@ export default class MapboxMap extends React.Component {
                     <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
                 </div>
                 <div ref={el => this.mapContainer = el} className='mapContainer'/>
+                <TimeBox onChange={this.loadGeoJson}/>
+                <Menu/>
             </div>
         )
     }

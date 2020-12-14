@@ -1,17 +1,35 @@
 .menu {
-  height: 30px;
-  width: 30px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  align-items: flex-end;
+  flex-direction: column;
+  user-select: none;
+  &__indicator{
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 6px;
+    background-color: #404040;
+  }
+  &__list{
+    &:not(&--visible){
+      display:none;
+    }
+
+    &__item{
+      background-color: #404040;
+      padding:6px;
+      margin-top:2px;
+      cursor: pointer;
+    }
+  }
   position: absolute;
   top: 0;
   right: 0;
   margin: 12px;
-  background-color: #404040;
   color: #ffffff;
   z-index: 1 !important;
-  padding: 6px;
   font-weight: bold;
 }
