@@ -32,6 +32,10 @@ class Menu extends Component {
                     <div className={"menu__list__item"}>
                         Datenquellen
                     </div>
+                    <div className={"menu__list__item"}>
+                        Verwendete Software
+                        {/*z.B. React, Font Awesome, Mapbox, die Wetter Icons usw.*/}
+                    </div>
                 </div>
             </div>
         );
