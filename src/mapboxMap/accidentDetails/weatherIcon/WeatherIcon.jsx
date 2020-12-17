@@ -9,7 +9,8 @@ import sand from "./svg/wi-sandstorm.svg";
 import rain from "./svg/wi-rain.svg";
 import cloudy from "./svg/wi-cloudy.svg";
 import hail from "./svg/wi-hail.svg";
-// import clear from "./svg/wi-sun.svg"; TODO
+import sun from "./svg/wi-day-sunny.svg";
+import night from "./svg/wi-night-clear.svg"
 import smoke from "./svg/wi-smoke.svg";
 import dust from "./svg/wi-dust.svg";
 import na from "./svg/wi-na.svg";
@@ -17,12 +18,11 @@ import "./WeatherIcon.scss";
 
 class WeatherIcon extends Component {
     render() {
-        const {weatherName} = this.props;
-
+        const {weatherName, dayNight} = this.props;
+        //TODO Use moon icons at night, sun icons at day
         let svg;
         switch (weatherName) {
             case "Windy":
-                //TODO Windstärke
                 svg = wind;
                 break;
             case "Volcano Ash":
@@ -53,7 +53,11 @@ class WeatherIcon extends Component {
                 svg = hail;
                 break;
             case "Clear":
-                svg = na; //TODO
+                if (dayNight === "Day") {
+                    svg = sun;
+                } else {
+                    svg = night;
+                }
                 break;
             case "Unspecified":
                 svg = na;

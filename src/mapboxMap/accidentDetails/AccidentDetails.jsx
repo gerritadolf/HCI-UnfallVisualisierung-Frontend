@@ -29,42 +29,89 @@ class AccidentDetails extends Component {
         //TODO Allgemein: Traffic Signal, Railway und die ganzen anderen Booleans
         return (
             <div className={"accident-details"}>
-                <h1>Unfall Details {id}</h1>
+                <h1>Accident Details {id}</h1>
                 {
                     data === null
                         ? (
                             <div className={"accident-details__loading"}>Loading...</div>
                         )
                         : (<div>
-                            <p>
-                                Datum / Uhrzeit: {
-                                    (new Date(data.start_Time)).toLocaleDateString() + ", " + (new Date(data.start_Time)).toLocaleTimeString()//TODO Passt die Zeitzone?
-                                }
-                            </p>
-                            <p>
-                                Beschreibung: {
-                                    data.description
-                                }
-                            </p>
-                            <p>
-                                Quelle: {
-                                    data.source
-                                }
-                            </p>
-                                <div className={"accident-details__geo"}>
-                                    <h2>Geografische Informationen</h2>
-                                    <p>Straße: {data.street}</p>
-                                    <p>Stadt: {data.zipcode + " " + data.city}</p>
-                                    <p>County: {data.county}</p>
-                                    <p>Bundesstaat: {data.state}</p>
-                                </div>
                                 <div className={"accident-details__weather"}>
-                                    <h2>Wetterbedingungen</h2>
+                                    <WeatherIcon weatherName={data.weatherGroupName} dayNight={data.sunrise_Sunset}/>
+                                    <p>{data.weather_Condition}</p>
                                     <div className={"accident-details__weather__content"}>
-                                        <WeatherIcon weatherName={data.weatherGroupName}/>
-                                        {data.weather_Condition}
+                                        Wind Speed: {data.wind_Speed || 0} mph | Temperature: {data.temperature} °F
                                     </div>
                                 </div>
+                                <p>
+                                    Description: {
+                                    data.description
+                                }
+                                </p>
+                                <div className={"accident-details__columns"}>
+                                    <div className={"accident-details__columns__column"}>
+                                        <div className={"row"}>
+                                            <div className={"left"}>Street:</div>
+                                            <div className={"right"}>{data.street} {data.number}</div>
+                                        </div>
+                                        <div className={"row"}>
+                                            <div className={"left"}>City:</div>
+                                            <div className={"right"}>{data.zipcode + " " + data.city}</div>
+                                        </div>
+                                        <div className={"row"}>
+                                            <div className={"left"}>County:</div>
+                                            <div className={"right"}>{data.county}</div>
+                                        </div>
+                                        <div className={"row"}>
+                                            <div className={"left"}>State:</div>
+                                            <div className={"right"}>{data.state}</div>
+                                        </div>
+                                    </div>
+                                    <div className={"accident-details__columns__column"}>
+                                        <div className={"row"}>
+                                            <div className={"left"}>Date / Time:</div>
+                                            <div className={"right"}>{
+                                                `${(new Date(data.start_Time)).toLocaleDateString()}, ${(new Date(data.start_Time)).toLocaleTimeString()}`//TODO Passt die Zeitzone?
+                                            }</div>
+                                        </div>
+                                        <div className={"row"}>
+                                            <div className={"left"}>Timezone:</div>
+                                            <div className={"right"}>{data.timezone}</div>
+                                        </div>
+                                        <div className={"row"}>
+                                            <div className={"left"}>Severity:</div>
+                                            <div className={"right"}>{data.severity}</div>
+                                        </div>
+                                        <div className={"row"}>
+                                            <div className={"left"}>Source:</div>
+                                            <div className={"right"}>{data.source}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {
+                                    data.crossing && <p>This accident occured on a crossing.</p>
+                                }
+                                {
+                                    data.roundabout && <p>This accident occured in a roundabout.</p>
+                                }
+                                {
+                                    data.railway && <p>This accident occured on a railway.</p>
+                                }
+                                {
+                                    data.traffic_Signal && <p>This accident occured on a traffic signal.</p>
+                                }
+                                {
+                                    data.turning_Loop && <p>This accident occured on a turning loop.</p>
+                                }
+                                {
+                                    data.station && <p>This accident occured on a station.</p>
+                                }
+                                {
+                                    data.junction && <p>This accident occured on a junction.</p>
+                                }
+                                {
+                                    data.bump && <p>This accident was a bump accident.</p>
+                                }
                             </div>
                         )
                 }

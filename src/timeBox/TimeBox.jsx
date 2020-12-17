@@ -14,7 +14,7 @@ class TimeBox extends Component {
         const {onChange} = this.props;
         return (
             <div className={"time-box"}>
-                Zeitleiste
+                Time Slider
                 <ReactSlider
                     className="time-slider"
                     thumbClassName="slider-thumb"

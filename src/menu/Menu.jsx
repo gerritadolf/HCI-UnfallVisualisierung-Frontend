@@ -24,16 +24,16 @@ class Menu extends Component {
                 </div>
                 <div className={classNames("menu__list", {"menu__list--visible": visible})}>
                     <div className={"menu__list__item"}>
-                        Corona-Fallzahlen
+                        Corona Layer
                     </div>
                     <div className={"menu__list__item"}>
-                        Wahlergebnisse 2020
+                        Election Results 2020 Layer
                     </div>
                     <div className={"menu__list__item"}>
-                        Datenquellen
+                        Data Sources
                     </div>
                     <div className={"menu__list__item"}>
-                        Verwendete Software
+                        Software
                         {/*z.B. React, Font Awesome, Mapbox, die Wetter Icons usw.*/}
                     </div>
                 </div>
