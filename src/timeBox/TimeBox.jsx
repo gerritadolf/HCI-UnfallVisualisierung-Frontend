@@ -23,19 +23,6 @@ class TimeBox extends Component {
         return `Q${quarter} ${year}`;
     }
 
-    getSourceString = (value) => {
-        const year = Math.floor(value)
-        const quarter = (value - year) * 4 + 1;
-
-        let startDate = new Date(`01 Jan ${year} 00:00:00 UTC`);
-        let endDate = new Date(`31 Dec ${year} 00:00:00 UTC`);
-
-        startDate.setMonth((quarter * 3) - 3, 1);
-        endDate.setMonth((quarter * 3), 0);
-
-        return `https://localhost:5001/accident/MapBox?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
-    }
-
     sliderOnChange = (value) => {
         const {onChange} = this.props;
 

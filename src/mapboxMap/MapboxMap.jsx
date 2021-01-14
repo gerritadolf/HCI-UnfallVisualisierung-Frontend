@@ -133,7 +133,7 @@ export default class MapboxMap extends React.Component {
             //accident source
             this.map.addSource('accident', {
                 type: 'geojson',
-                data: this.getSourceString(2016),
+                data: this.getSourceString(new Date(2016, 1, 1), new Date(2016, 4, 1)),
                 // Point to GeoJSON data. This example visualizes all M1.0+ accident
                 // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
                 // data: "https://docs.mapbox.com/mapbox-gl-js/assets/accident.geojson",
@@ -382,9 +382,12 @@ export default class MapboxMap extends React.Component {
         });
     }
 
+    getSourceString = (startDate, endDate) => {
+        return `https://localhost:5001/accident/MapBox?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
+    }
+
     onChange = (startDate, endDate) => {
-        let sourceString = `https://localhost:5001/accident/MapBox?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
-        this.map.getSource('accident').setData(sourceString);
+        this.map.getSource('accident').setData(this.getSourceString(startDate, endDate));
     }
 
     render() {
