@@ -345,15 +345,15 @@ export default class MapboxMap extends React.Component {
                             ['linear'],
                             ['zoom'],
                             7,
-                            ['interpolate', ['linear'], ['get', 'mag'], 1, 1, 6, 4],
+                            ['interpolate', ['linear'], ['get', 'Serverity'], 1, 1, 6, 4],
                             16,
-                            ['interpolate', ['linear'], ['get', 'mag'], 1, 5, 6, 50]
+                            ['interpolate', ['linear'], ['get', 'Serverity'], 1, 5, 6, 50]
                         ],
                         // Color circle by earthquake magnitude
                         'circle-color': [
                             'interpolate',
                             ['linear'],
-                            ['get', 'mag'],
+                            ['get', 'Serverity'],
                             1,
                             'rgba(33,102,172,0)',
                             2,

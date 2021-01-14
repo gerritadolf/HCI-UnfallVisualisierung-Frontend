@@ -80,7 +80,7 @@ class AccidentDetails extends Component {
                                         </div>
                                         <div className={"row"}>
                                             <div className={"left"}>Severity:</div>
-                                            <div className={"right"}>{data.severity}</div>
+                                            <div className={"right"}>{data.serverity}</div>
                                         </div>
                                         <div className={"row"}>
                                             <div className={"left"}>Source:</div>
