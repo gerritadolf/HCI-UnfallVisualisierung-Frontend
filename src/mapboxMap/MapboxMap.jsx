@@ -270,11 +270,11 @@ export default class MapboxMap extends React.Component {
                         'heatmap-weight': [
                             'interpolate',
                             ['linear'],
-                            ['get', 'mag'],
-                            0,
-                            0,
-                            6,
-                            1
+                            ['get', 'Serverity'],
+                            1,
+                            2,
+                            3,
+                            4
                         ],
                         // Increase the heatmap color weight weight by zoom level
                         // heatmap-intensity is a multiplier on top of heatmap-weight
@@ -345,26 +345,22 @@ export default class MapboxMap extends React.Component {
                             ['linear'],
                             ['zoom'],
                             7,
-                            ['interpolate', ['linear'], ['get', 'mag'], 1, 1, 6, 4],
+                            ['interpolate', ['linear'], ['get', 'Serverity'], 1, 1, 6, 4],
                             16,
-                            ['interpolate', ['linear'], ['get', 'mag'], 1, 5, 6, 50]
+                            ['interpolate', ['linear'], ['get', 'Serverity'], 1, 5, 6, 50]
                         ],
                         // Color circle by earthquake magnitude
                         'circle-color': [
                             'interpolate',
                             ['linear'],
-                            ['get', 'mag'],
+                            ['get', 'Serverity'],
                             1,
-                            'rgba(33,102,172,0)',
+                            'rgb(115,172,224)',
                             2,
-                            'rgb(103,169,207)',
-                            3,
-                            'rgb(209,229,240)',
-                            4,
                             'rgb(253,219,199)',
-                            5,
+                            3,
                             'rgb(239,138,98)',
-                            6,
+                            4,
                             'rgb(178,24,43)'
                         ],
                         'circle-stroke-color': 'white',
@@ -386,22 +382,9 @@ export default class MapboxMap extends React.Component {
         });
     }
 
-    getSourceString = (value) => {
-        const year = Math.floor(value)
-        const quarter = (value - year) * 4 + 1;
-
-        let startDate = new Date(`01 Jan ${year} 00:00:00 UTC`);
-        let endDate = new Date(`31 Dec ${year} 00:00:00 UTC`);
-
-        startDate.setMonth((quarter * 3) - 3, 1);
-        endDate.setMonth((quarter * 3), 0);
-
-        return `https://localhost:5001/accident/MapBox?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
-    }
-
-    loadGeoJson = (value) => {
-        console.log(this.map)
-        this.map.getSource('accident').setData(this.getSourceString(value));
+    onChange = (startDate, endDate) => {
+        let sourceString = `https://localhost:5001/accident/MapBox?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
+        this.map.getSource('accident').setData(sourceString);
     }
 
     render() {
@@ -411,7 +394,7 @@ export default class MapboxMap extends React.Component {
                     <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
                 </div>
                 <div ref={el => this.mapContainer = el} className='mapContainer'/>
-                <TimeBox onChange={this.loadGeoJson}/>
+                <TimeBox onChange={this.onChange}/>
                 <Menu/>
             </div>
         )
