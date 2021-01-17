@@ -1,20 +1,29 @@
 import React, {Component} from 'react';
 import "./TimeBox.scss";
 import ReactSlider from "react-slider";
+import {getAvailableFilters} from "../helper/filterHelper";
 
 class TimeBox extends Component {
 
     static viewSelection = {
         SLIDER: 0,
         DATE: 1,
-        ID: 2
     }
+
+    startDate = null;
+    endDate = null;
+    selectedFilters = [];
 
     constructor(props) {
         super(props);
         this.state = {
-            viewSelect: TimeBox.viewSelection.SLIDER
+            viewSelect: TimeBox.viewSelection.SLIDER,
+            filters: null
         }
+        getAvailableFilters().then((filters) => {
+            this.setState({filters});
+        })
+        this.sliderOnChange(2016)
     }
 
     valueToText(value) {
@@ -24,31 +33,50 @@ class TimeBox extends Component {
     }
 
     sliderOnChange = (value) => {
-        const {onChange} = this.props;
-
         const year = Math.floor(value)
         const quarter = (value - year) * 4 + 1;
 
-        let startDate = new Date(`01 Jan ${year} 00:00:00 UTC`);
-        let endDate = new Date(`31 Dec ${year} 00:00:00 UTC`);
+        this.startDate = new Date(`01 Jan ${year} 00:00:00 UTC`);
+        this.endDate = new Date(`31 Dec ${year} 00:00:00 UTC`);
 
-        startDate.setMonth((quarter * 3) - 3, 1);
-        endDate.setMonth((quarter * 3), 0);
-
-        onChange(startDate, endDate);
+        this.startDate.setMonth((quarter * 3) - 3, 1);
+        this.endDate.setMonth((quarter * 3), 0);
     }
 
+    checkboxOnChange = (event) => {
+        if (event.target.checked) {
+            this.selectedFilters.push(event.target.value);
+        } else {
+            this.selectedFilters.splice(this.selectedFilters.indexOf(event.target.value), 1);
+        }
+    };
+
     render() {
-        const {viewSelect} = this.state;
-        console.log(viewSelect)
+        const {viewSelect, filters} = this.state;
         return (
             <div className={"time-box"}>
+                <div className={"filters"}>
+                    <h3>Filters</h3>
+                    <div className={"filter-wrapper"}>
+                        {
+                            filters === null ||
+                            (
+                                Object.keys(filters).map((filter) => (
+                                    <div className={"filter"}>
+                                        <input type="checkbox" id={filters[filter]} value={filters[filter]}
+                                               onChange={this.checkboxOnChange}/>
+                                        <label htmlFor={filters[filter]}>{filter}</label>
+                                    </div>
+                                ))
+                            )
+                        }
+                    </div>
+                </div>
                 <select onChange={(result) => {
                     this.setState({viewSelect: parseInt(result.target.value, 10)});
                 }}>
                     <option value={TimeBox.viewSelection.SLIDER}>Quarter Time Slider</option>
                     <option value={TimeBox.viewSelection.DATE}>Select Date</option>
-                    <option value={TimeBox.viewSelection.ID}>ID Search</option>
                 </select>
                 {
                     viewSelect === TimeBox.viewSelection.SLIDER && (
@@ -68,50 +96,52 @@ class TimeBox extends Component {
                 }
                 {
                     viewSelect === TimeBox.viewSelection.DATE && (
-                        <div>
-                            <label htmlFor="start">Start date:</label>
-                            <input type="date" id="start"
-                                   min="2016-01-01" max="2020-12-31" ref={(ref) => this.startRef = ref}/>
-                            <br/>
-                            <label htmlFor="end">End date:</label>
-                            <input type="date" id="end"
-                                   min="2016-01-01" max="2020-12-31" ref={(ref) => this.endRef = ref}/>
-                            <br/>
-                            <button onClick={() => {
-                                const {onChange} = this.props;
-                                let start = this.startRef.value;
-                                let end = this.endRef.value;
-
-                                if (start && end) {
-                                    if(new Date(start)>new Date(end)){
-                                        alert("The start date has to be before the end date.")
-                                    }
-                                } else if (start) {
-                                    end = start;
-                                } else if (end) {
-                                    start = end;
-                                } else {
-                                    alert("Please select a date.")
-                                    return;
-                                }
-
-
-                                let startDate = new Date(`${start} 00:00:00 UTC`);
-                                let endDate = new Date(`${end} 23:59:59 UTC`);
-                                onChange(startDate, endDate)
-
-                            }}>Load accidents
-                            </button>
+                        <div className={"select-dates"}>
+                            <div className={"select-date"}>
+                                <label htmlFor="start">Start date:</label>
+                                <input type="date" id="start"
+                                       min="2016-01-01" max="2020-12-31" ref={(ref) => this.startRef = ref}
+                                       onInput={(event) => {
+                                           this.startDate = new Date(`${event.target.value} 00:00:00 UTC`)
+                                       }}/>
+                            </div>
+                            <div className={"select-date"}>
+                                <label htmlFor="end">End date:</label>
+                                <input type="date" id="end"
+                                       min="2016-01-01" max="2020-12-31" ref={(ref) => this.endRef = ref}
+                                       onInput={(event) => {
+                                           this.endDate = new Date(`${event.target.value} 00:00:00 UTC`)
+                                       }}/>
+                            </div>
                         </div>
                     )
                 }
-                {
-                    viewSelect === TimeBox.viewSelection.ID && (
-                        <div>
+                <button onClick={() => {
+                    const {onChange} = this.props;
 
-                        </div>
-                    )
-                }
+                    if (this.startDate && this.endDate) {
+                        if (this.startDate > this.endDate) {
+                            alert("The start date has to be before the end date.")
+                        }
+                    } else if (this.startDate) {
+                        this.endDate = this.startDate;
+                    } else if (this.endDate) {
+                        this.startDate = this.endDate;
+                    } else {
+                        alert("Please select a date.")
+                        return;
+                    }
+
+                    let filters = 0;
+                    for (const index in (this.selectedFilters)) {
+                        filters = filters | parseInt(this.selectedFilters[index], 10);
+                    }
+
+                    console.log(filters, this.selectedFilters)
+
+                    onChange(this.startDate, this.endDate, filters)
+                }}>Load Accidents
+                </button>
             </div>
         );
     }

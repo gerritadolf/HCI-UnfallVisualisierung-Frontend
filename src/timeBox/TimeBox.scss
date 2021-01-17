@@ -1,34 +1,91 @@
-.time-box {
-    min-width: 300px;
-    width: 20%;
-    max-width: 90%;
-    display: inline-block;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin: 12px;
-    background-color: #404040;
-    color: #ffffff;
-    z-index: 1 !important;
-    padding: 6px;
-    font-weight: bold;
+@mixin button-style {
+  border: none;
+  font: inherit;
+  background: #ffffff;
+  color: #222222;
+  padding: 5px 10px;
+  outline: none;
+  cursor: pointer;
+}
 
-    .time-slider{
-        width: 100%;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        .slider-thumb{
-            background: #ffffff;
-            color: #222222;
-            padding: 5px;
-            outline: none;
-            cursor: pointer;
-        }
-        .slider-track{
-            cursor: pointer;
-            height: 10px;
-            background: #808080;
-        }
+.time-box {
+  select {
+    @include button-style;
+  }
+
+  min-width: 300px;
+  width: 20%;
+  max-width: 90%;
+  display: inline-block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 12px;
+  background-color: #404040;
+  color: #ffffff;
+  z-index: 1 !important;
+  padding: 6px;
+  font-weight: bold;
+
+  .time-slider {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+
+    .slider-thumb {
+      @include button-style;
     }
+
+    .slider-track {
+      cursor: pointer;
+      height: 10px;
+      background: #808080;
+    }
+  }
+
+  .filters {
+    user-select: none;
+    margin-bottom: 15px;
+
+    h3{
+      margin: 5px;
+    }
+
+    .filter-wrapper {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .filter {
+        display: flex;
+        width: 50%;
+
+        input {
+          margin-right: 5px;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  .select-dates {
+    padding: 10px 0;
+
+    .select-date {
+      input{
+        @include button-style;
+        padding: 2px 5px;
+        font-size: 85%;
+      }
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+    }
+  }
+
+  button {
+    @include button-style;
+  }
 }

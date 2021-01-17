@@ -197,12 +197,15 @@ export default class MapboxMap extends React.Component {
         });
     }
 
-    getSourceString = (startDate, endDate) => {
-        return `https://localhost:5001/accident/MapBox?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
+    getSourceString = (startDate, endDate, filter) => {
+        if(!filter){
+            filter = 0;
+        }
+        return `https://localhost:5001/accident/MapBox?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}&filter=${filter}`;
     }
 
-    onChange = (startDate, endDate) => {
-        this.map.getSource('accident').setData(this.getSourceString(startDate, endDate));
+    onChange = (startDate, endDate, filters) => {
+        this.map.getSource('accident').setData(this.getSourceString(startDate, endDate, filters));
     }
 
     render() {
