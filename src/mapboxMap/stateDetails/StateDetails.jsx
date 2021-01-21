@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import "./StateDetails.scss";
-import {Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis} from "recharts";
+import {Line, LineChart, Legend, CartesianGrid, Tooltip, XAxis, YAxis} from "recharts";
 
 class StateDetails extends Component {
     data = [
@@ -13,11 +13,15 @@ class StateDetails extends Component {
         {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
     ];
 
+    accidentData = (startDate, endDate) => {
+
+    }
+
     render() {
         return (
             <div>
-                <h1>{this.props.stateName}</h1>
-                <AreaChart
+                <h1>{this.props.stateName} - Number of Accidents by Severity</h1>
+                <LineChart
                     width={400} height={250}
                     data={this.data}
                            margin={{top: 10, right: 30, left: 0, bottom: 0}}>
@@ -25,8 +29,12 @@ class StateDetails extends Component {
                     <XAxis dataKey="name"/>
                     <YAxis/>
                     <Tooltip/>
-                    <Area type='monotone' dataKey='uv' stroke='#8884d8' fill='#8884d8'/>
-                </AreaChart>
+                    <Legend verticalAlign="top"/>
+                    <Line type="natural" dataKey="uv" stroke="rgb(115,172,224)"/>
+                    <Line type="natural" dataKey="uv" stroke="rgb(253,219,199)"/>
+                    <Line type ="natural" dataKey="pv" stroke="rgb(239,138,98)"/>
+                    <Line type="natural" dataKey="amt" stroke="rgb(178,24,43)"/>
+                </LineChart>
             </div>
         );
     }
