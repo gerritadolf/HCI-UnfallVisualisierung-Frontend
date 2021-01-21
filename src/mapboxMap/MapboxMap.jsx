@@ -15,7 +15,9 @@ export default class MapboxMap extends React.Component {
         this.state = {
             lng: -95.712891,
             lat: 37.090240,
-            zoom: 4.5
+            zoom: 4.5,
+            startDate: null,
+            endDate: null
         };
         this.map = null;
     }
@@ -71,10 +73,13 @@ export default class MapboxMap extends React.Component {
                         feature = features.find(f => f.layer.id === "state-fills")
                         if (feature) {
                             // Show state popup
-                            let name = features[0].properties.name
+                            let name = features[0].properties.name;
+                            let postalCode = features[0].properties.postal;
 
+                            console.log("Values: ", this.state.startDate, this.state.endDate);
+                            console.log("Features: ", features);
                             addPopup(e.lngLat, this.map, (
-                                <StateDetails stateName={name}/>
+                                <StateDetails stateName={name} startDate={this.state.startDate} endDate={this.state.endDate} postal={postalCode}/>
                             ))
                         }
                     }
@@ -205,7 +210,10 @@ export default class MapboxMap extends React.Component {
     }
 
     onChange = (startDate, endDate, filters) => {
+        console.log("Values (onChange): ", startDate, endDate);
         this.map.getSource('accident').setData(this.getSourceString(startDate, endDate, filters));
+        this.setState({startDate: startDate});
+        this.setState({endDate: endDate});
     }
 
     render() {
