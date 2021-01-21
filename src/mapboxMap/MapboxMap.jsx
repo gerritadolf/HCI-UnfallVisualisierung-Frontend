@@ -32,7 +32,6 @@ export default class MapboxMap extends React.Component {
         });
 
         this.map.on("load", () => {
-            console.log("map loaded")
 
             // Coordinates in the upper left corner
             this.map.on('move', () => {
@@ -76,8 +75,6 @@ export default class MapboxMap extends React.Component {
                             let name = features[0].properties.name;
                             let postalCode = features[0].properties.postal;
 
-                            console.log("Values: ", this.state.startDate, this.state.endDate);
-                            console.log("Features: ", features);
                             addPopup(e.lngLat, this.map, (
                                 <StateDetails stateName={name} startDate={this.state.startDate} endDate={this.state.endDate} postal={postalCode}/>
                             ))
