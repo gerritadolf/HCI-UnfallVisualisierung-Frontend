@@ -13,6 +13,7 @@ class Menu extends Component {
 
     render() {
         const {visible, contentWindow} = this.state;
+        const {onCoronaChange} = this.props;
 
         return [
             <div className={"menu"}>
@@ -22,7 +23,7 @@ class Menu extends Component {
                     <FontAwesomeIcon icon={faBars}/>
                 </div>
                 <div className={classNames("menu__list", {"menu__list--visible": visible})}>
-                    <div className={"menu__list__item"}>
+                    <div className={"menu__list__item"} onClick={onCoronaChange}>
                         Corona Layer
                     </div>
                     <div className={"menu__list__item"}>
@@ -33,7 +34,9 @@ class Menu extends Component {
                             contentWindow: (
                                 <div className={"content"}>
                                     <h2>Data Sources</h2>
-                                    As data source, we used <a href={"https://www.kaggle.com/sobhanmoosavi/us-accidents"}>this dataset</a> from kaggle.com.
+                                    As data source, we used <a
+                                    href={"https://www.kaggle.com/sobhanmoosavi/us-accidents"}>this dataset</a> from
+                                    kaggle.com.
                                 </div>
                             )
                         })

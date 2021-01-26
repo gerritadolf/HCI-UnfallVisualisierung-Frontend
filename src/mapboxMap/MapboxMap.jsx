@@ -17,9 +17,10 @@ export default class MapboxMap extends React.Component {
             lat: 37.090240,
             zoom: 4.5,
             startDate: null,
-            endDate: null
+            endDate: null,
         };
         this.map = null;
+        this.showCoronaLayer = false;
     }
 
 
@@ -55,7 +56,7 @@ export default class MapboxMap extends React.Component {
                 "source": "states",
                 "layout": {},
                 "paint": {
-                    "fill-opacity": 0
+                    "fill-opacity": 0,
                 }
             });
 
@@ -76,13 +77,13 @@ export default class MapboxMap extends React.Component {
                             let postalCode = features[0].properties.postal;
 
                             addPopup(e.lngLat, this.map, (
-                                <StateDetails stateName={name} startDate={this.state.startDate} endDate={this.state.endDate} postal={postalCode}/>
+                                <StateDetails stateName={name} startDate={this.state.startDate}
+                                              endDate={this.state.endDate} postal={postalCode}/>
                             ))
                         }
                     }
                 }
             });
-
 
             //accident source
             this.map.addSource('accident', {
@@ -92,7 +93,6 @@ export default class MapboxMap extends React.Component {
                 // clusterMaxZoom: 14, // Max zoom to cluster points on
                 // clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
             });
-
 
             // accident heatmap
             this.map.addLayer(
@@ -196,11 +196,13 @@ export default class MapboxMap extends React.Component {
                 },
                 'waterway-label'
             );
+
+            this.updateCoronaLayer();
         });
     }
 
     getSourceString = (startDate, endDate, filter) => {
-        if(!filter){
+        if (!filter) {
             filter = 0;
         }
         return `https://localhost:5001/accident/MapBox?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}&filter=${filter}`;
@@ -211,6 +213,72 @@ export default class MapboxMap extends React.Component {
         this.map.getSource('accident').setData(this.getSourceString(startDate, endDate, filters));
         this.setState({startDate: startDate});
         this.setState({endDate: endDate});
+        this.updateCoronaLayer();
+    }
+
+    getCoronaColorArray = (data) => {
+        const returnArray = ['match', ['get', 'postal']];
+
+        for (const key in data) {
+            const value = data[key];
+            returnArray.push(key);
+            switch (value) {
+                case value > 1000:
+                    returnArray.push('#D60000');
+                    break;
+                case value > 900:
+                    returnArray.push('#DA1A0B');
+                    break;
+                case value > 800:
+                    returnArray.push('#DE3315');
+                    break;
+                case value > 700:
+                    returnArray.push('#E24D20');
+                    break;
+                case value > 600:
+                    returnArray.push('#E6662B');
+                    break;
+                case value > 500:
+                    returnArray.push('#EB8036');
+                    break;
+                case value > 400:
+                    returnArray.push('#EF9940');
+                    break;
+                case value > 300:
+                    returnArray.push('#F3B34B');
+                    break;
+                case value > 200:
+                    returnArray.push('#F7CC56');
+                    break;
+                case value > 100:
+                    returnArray.push('#FBE660');
+                    break;
+                default:
+                    returnArray.push('#FFFF6B');
+                    break;
+            }
+        }
+        returnArray.push('#ffffff');
+        return returnArray;
+    }
+
+    updateCoronaLayer = () => {
+        const {startDate, endDate} = this.state;
+        if (this.showCoronaLayer) {
+            const data = {CA: 100, NY: 500, TX: 700, NV: 30, OR: 0};//TODO FETCH DATA
+            this.map.addLayer({
+                    'id': 'corona',
+                    'type': 'fill',
+                    'source': 'states',
+                    'paint': {
+                        'fill-color': this.getCoronaColorArray(data),
+                        'fill-opacity': 0.5,
+                    }
+                },
+                'accident-heat');
+        } else {
+            this.map.removeLayer("corona")
+        }
     }
 
     render() {
@@ -221,7 +289,10 @@ export default class MapboxMap extends React.Component {
                 </div>
                 <div ref={el => this.mapContainer = el} className='mapContainer'/>
                 <TimeBox onChange={this.onChange}/>
-                <Menu/>
+                <Menu onCoronaChange={() => {
+                    this.showCoronaLayer = !this.showCoronaLayer;
+                    this.updateCoronaLayer();
+                }}/>
             </div>
         )
     }
