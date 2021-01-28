@@ -6,6 +6,7 @@ import StateDetails from "./stateDetails/StateDetails";
 import AccidentDetails from "./accidentDetails/AccidentDetails";
 import TimeBox from "../timeBox/TimeBox";
 import Menu from "../menu/Menu";
+import {electionResults} from "../data/election2020";
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9uYXNnbzk3IiwiYSI6ImNraTRyaHkzNTAyNzgzM24ydG45dnVkc3oifQ.X3ChHgCMZxbD3yEPNDkr9A'; // public token
 
@@ -21,6 +22,7 @@ export default class MapboxMap extends React.Component {
         };
         this.map = null;
         this.showCoronaLayer = false;
+        this.showElectionLayer = false;
     }
 
 
@@ -222,7 +224,7 @@ export default class MapboxMap extends React.Component {
         for (const key in data) {
             const value = data[key];
             returnArray.push(key);
-            switch (value) {
+            switch (true) {
                 case value > 1000:
                     returnArray.push('#D60000');
                     break;
@@ -281,6 +283,39 @@ export default class MapboxMap extends React.Component {
         }
     }
 
+    getElectionLayer = (data) => {
+        const returnArray = ['match', ['get', 'postal']];
+
+        for (const key in data) {
+            const value = data[key];
+            returnArray.push(value.state);
+            if (value.trumpVotes > value.bidenVotes) {
+                returnArray.push("#D81C28");
+            } else {
+                returnArray.push("#019BD8");
+            }
+        }
+        returnArray.push('#ffffff');
+        return returnArray;
+    }
+
+    updateElectionLayer = () => {
+        if (this.showElectionLayer) {
+            this.map.addLayer({
+                    'id': 'election',
+                    'type': 'fill',
+                    'source': 'states',
+                    'paint': {
+                        'fill-color': this.getElectionLayer(electionResults),
+                        'fill-opacity': 0.5,
+                    }
+                },
+                'accident-heat');
+        } else {
+            this.map.removeLayer("election")
+        }
+    }
+
     render() {
         return (
             <div>
@@ -292,6 +327,9 @@ export default class MapboxMap extends React.Component {
                 <Menu onCoronaChange={() => {
                     this.showCoronaLayer = !this.showCoronaLayer;
                     this.updateCoronaLayer();
+                }} onElectionChange={() => {
+                    this.showElectionLayer = !this.showElectionLayer;
+                    this.updateElectionLayer();
                 }}/>
             </div>
         )

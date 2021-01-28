@@ -13,7 +13,7 @@ class Menu extends Component {
 
     render() {
         const {visible, contentWindow} = this.state;
-        const {onCoronaChange} = this.props;
+        const {onCoronaChange, onElectionChange} = this.props;
 
         return [
             <div className={"menu"}>
@@ -26,7 +26,7 @@ class Menu extends Component {
                     <div className={"menu__list__item"} onClick={onCoronaChange}>
                         Corona Layer
                     </div>
-                    <div className={"menu__list__item"}>
+                    <div className={"menu__list__item"} onClick={onElectionChange}>
                         Election Results 2020 Layer
                     </div>
                     <div className={"menu__list__item"} onClick={() => {
