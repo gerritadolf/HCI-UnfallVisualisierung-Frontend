@@ -7,6 +7,7 @@ import AccidentDetails from "./accidentDetails/AccidentDetails";
 import TimeBox from "../timeBox/TimeBox";
 import Menu from "../menu/Menu";
 import {electionResults} from "../data/election2020";
+import {getCoronaUrl} from "../helper/urlHelper";
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9uYXNnbzk3IiwiYSI6ImNraTRyaHkzNTAyNzgzM24ydG45dnVkc3oifQ.X3ChHgCMZxbD3yEPNDkr9A'; // public token
 
@@ -17,8 +18,8 @@ export default class MapboxMap extends React.Component {
             lng: -95.712891,
             lat: 37.090240,
             zoom: 4.5,
-            startDate: null,
-            endDate: null,
+            startDate: new Date(2016, 1, 1),
+            endDate: new Date(2016, 4, 1),
         };
         this.map = null;
         this.showCoronaLayer = false;
@@ -27,6 +28,7 @@ export default class MapboxMap extends React.Component {
 
 
     componentDidMount() {
+        const {startDate, endDate} = this.state;
         this.map = new mapboxgl.Map({
             container: this.mapContainer,
             style: 'mapbox://styles/jonasgo97/cki60o3iv19te19pi2hc48lki',
@@ -90,7 +92,7 @@ export default class MapboxMap extends React.Component {
             //accident source
             this.map.addSource('accident', {
                 type: 'geojson',
-                data: this.getSourceString(new Date(2016, 1, 1), new Date(2016, 4, 1)),
+                data: this.getSourceString(startDate, endDate),
                 // cluster: true,
                 // clusterMaxZoom: 14, // Max zoom to cluster points on
                 // clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
@@ -223,36 +225,36 @@ export default class MapboxMap extends React.Component {
 
         for (const key in data) {
             const value = data[key];
-            returnArray.push(key);
+            returnArray.push(value['province_State']);
             switch (true) {
-                case value > 1000:
+                case value.confirmed > 1000000:
                     returnArray.push('#D60000');
                     break;
-                case value > 900:
+                case value.confirmed > 900000:
                     returnArray.push('#DA1A0B');
                     break;
-                case value > 800:
+                case value.confirmed > 800000:
                     returnArray.push('#DE3315');
                     break;
-                case value > 700:
+                case value.confirmed > 700000:
                     returnArray.push('#E24D20');
                     break;
-                case value > 600:
+                case value.confirmed > 600000:
                     returnArray.push('#E6662B');
                     break;
-                case value > 500:
+                case value.confirmed > 500000:
                     returnArray.push('#EB8036');
                     break;
-                case value > 400:
+                case value.confirmed > 400000:
                     returnArray.push('#EF9940');
                     break;
-                case value > 300:
+                case value.confirmed > 300000:
                     returnArray.push('#F3B34B');
                     break;
-                case value > 200:
+                case value.confirmed > 200000:
                     returnArray.push('#F7CC56');
                     break;
-                case value > 100:
+                case value.confirmed > 100000:
                     returnArray.push('#FBE660');
                     break;
                 default:
@@ -264,10 +266,15 @@ export default class MapboxMap extends React.Component {
         return returnArray;
     }
 
-    updateCoronaLayer = () => {
+    updateCoronaLayer = async () => {
         const {startDate, endDate} = this.state;
         if (this.showCoronaLayer) {
-            const data = {CA: 100, NY: 500, TX: 700, NV: 30, OR: 0};//TODO FETCH DATA
+            const result = await fetch(getCoronaUrl(startDate, endDate));
+            if (result === null || result === undefined || result.status !== 200) {
+                alert("An error occured.");
+                return;
+            }
+            const data = await result.json();
             this.map.addLayer({
                     'id': 'corona',
                     'type': 'fill',

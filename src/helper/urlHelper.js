@@ -1,7 +1,9 @@
-const baseUrl = `https://localhost:5001/accident/`;
+const baseUrl = `https://localhost:5001/`;
 
-const getFiltersUrl = () => `${baseUrl}filterflags`;
+const getFiltersUrl = () => `${baseUrl}accident/filterflags`;
 
-const getStateData = (state, startDate, endDate) => `${baseUrl}state/${state}?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
+const getStateData = (state, startDate, endDate) => `${baseUrl}accident/state/${state}?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
 
-export {getFiltersUrl, getStateData};
+const getCoronaUrl = (startDate, endDate) => `${baseUrl}corona?startDate=${startDate.toJSON()}&endDate=${endDate.toJSON()}`;
+
+export {getFiltersUrl, getStateData, getCoronaUrl};
