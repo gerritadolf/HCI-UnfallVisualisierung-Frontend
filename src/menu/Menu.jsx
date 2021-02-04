@@ -34,9 +34,17 @@ class Menu extends Component {
                             contentWindow: (
                                 <div className={"content"}>
                                     <h2>Data Sources</h2>
-                                    As data source, we used <a
-                                    href={"https://www.kaggle.com/sobhanmoosavi/us-accidents"}>this dataset</a> from
-                                    kaggle.com.
+                                    <p>Accident data: <a
+                                        href={"https://www.kaggle.com/sobhanmoosavi/us-accidents"}>https://www.kaggle.com/sobhanmoosavi/us-accidents</a>
+                                    </p>
+
+                                    <p>2020 Presidential Election data: <a
+                                        href={"https://cookpolitical.com/2020-national-popular-vote-tracker"}>https://cookpolitical.com/2020-national-popular-vote-tracker</a>
+                                    </p>
+
+                                    <p>US Covid Data: <a
+                                        href={"https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports_us"}>https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_daily_reports_us</a>
+                                    </p>
                                 </div>
                             )
                         })
@@ -48,6 +56,7 @@ class Menu extends Component {
                             contentWindow: (
                                 <div className={"content"}>
                                     <h2>Used Software</h2>
+                                    <h3>Frontend</h3>
                                     <ul>
                                         <li>React</li>
                                         <li>Mapbox Web GL</li>
@@ -58,28 +67,34 @@ class Menu extends Component {
                                             <a href={"https://github.com/erikflowers/weather-icons"}>weather-icons</a>
                                         </li>
                                     </ul>
+                                    <h3>Backend & Database</h3>
+                                    <ul>
+                                        <li>ASP.NET Core 3.1</li>
+                                        <li>Dapper</li>
+                                        <li>MySQL</li>
+                                    </ul>
                                 </div>
                             )
                         })
                     }}>
                         Software
-                    </div>
-                </div>
-            </div>,
-            <div className={classNames("content-window", {"content-window--invisible": contentWindow === null})}>
-                <div className={"content-window__inner-wrapper"}>
-                    <div className={"close"} onClick={() => {
+                        </div>
+                        </div>
+                        </div>,
+                        <div className={classNames("content-window", {"content-window--invisible": contentWindow === null})}>
+                        <div className={"content-window__inner-wrapper"}>
+                        <div className={"close"} onClick={() => {
                         this.setState({contentWindow: null})
-                    }}>
+                        }}>
                         <FontAwesomeIcon icon={faTimes}/>
-                    </div>
-                    {
+                        </div>
+                        {
                         contentWindow
-                    }
-                </div>
-            </div>
-        ];
-    }
-}
+                        }
+                        </div>
+                        </div>
+                        ];
+                        }
+                        }
 
-export default Menu;
+                        export default Menu;
