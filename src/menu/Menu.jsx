@@ -58,20 +58,20 @@ class Menu extends Component {
                                     <h2>Used Software</h2>
                                     <h3>Frontend</h3>
                                     <ul>
-                                        <li>React</li>
-                                        <li>Mapbox Web GL</li>
-                                        <li><a href={"https://github.com/JedWatson/classnames"}>classnames</a></li>
-                                        <li><a href={"https://github.com/recharts/recharts"}>recharts</a></li>
-                                        <li>Font Awesome Free</li>
+                                        <li><a href={"https://reactjs.org/" } target={"__blank"}>React</a></li>
+                                        <li><a href={"https://www.mapbox.com/"} target={"__blank"}>Mapbox Web GL</a></li>
+                                        <li><a href={"https://github.com/JedWatson/classnames"} target={"__blank"}>classnames</a></li>
+                                        <li><a href={"https://github.com/recharts/recharts"} target={"__blank"}>recharts</a></li>
+                                        <li><a href={"https://fontawesome.com/"} target={"__blank"}>Font Awesome Free</a></li>
                                         <li>
                                             <a href={"https://github.com/erikflowers/weather-icons"}>weather-icons</a>
                                         </li>
                                     </ul>
                                     <h3>Backend & Database</h3>
                                     <ul>
-                                        <li>ASP.NET Core 3.1</li>
-                                        <li>Dapper</li>
-                                        <li>MySQL</li>
+                                        <li><a href={"https://dotnet.microsoft.com/download"} target={"__blank"}>ASP.NET Core 3.1</a></li>
+                                        <li><a href={"https://dapper-tutorial.net/dapper"} target={"__blank"}>Dapper</a></li>
+                                        <li><a href={"https://www.mysql.com/de/"} target={"__blank"}>MySQL</a></li>
                                     </ul>
                                 </div>
                             )
